@@ -1,0 +1,38 @@
+services:
+  main_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: microservice_admin
+    ports:
+      - "33864:3386"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  main:
+    build:
+      context: .
+    ports:
+      -  "8001:8000"
+    depends_on:
+      - main_db
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: main_db
+      DB_PORT: 3306
+      DB_DATABASE: microservice_main
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+    volumes:
+      - .:/app
+      - ./storage:/app/storage
+      - ./vendor:/app/vendor
+
+volumes:
+  dbdata: {}
