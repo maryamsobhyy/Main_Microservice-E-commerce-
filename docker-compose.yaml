@@ -3,13 +3,13 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: microservice_admin
+      MYSQL_DATABASE: microservice_main
     ports:
       - "33864:3386"
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "main_db"]
       interval: 10s
       retries: 5
       start_period: 30s
